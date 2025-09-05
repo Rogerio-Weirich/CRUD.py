@@ -12,6 +12,7 @@ def add_student(new_student): #defines a function for name and surname
     students.append(new_student) # add the value 'name' and 'surname' to the list 'students'
     return students #returns the list 'students' updated
 
+# noinspection PyShadowingNames
 def add_professor(new_professor): # defines a function for name and surname
     professors.append(new_professor) # add the value 'name' and 'surname' to the list 'professors'
     return professors # returns the list 'professors' updated
@@ -48,8 +49,8 @@ def select_course(): # defines the course menu
 #Dictionary for the Menus
 MAIN_MENU = {
     'A':'Student',
-    'B':'Course',
-    'C':'Professor',
+    'B':'Professor',
+    'C':'Course',
     'D':'Class',
     'E':'Enrollment',
 }
@@ -69,7 +70,7 @@ while True:
     )
     #fetches user's chosen option for the main menu
     option = input("Choose an option: ").upper()
-    if option == 'B':
+    if option == 'C':
         if len(students) == 0: # verify if students have been added beforehand
             print('No registed students in a course yet.')
         else: # if students registered, show current list
@@ -78,9 +79,6 @@ while True:
     if option == 'X':
         print("Exiting the system...")
         break #breaks the loop if "exit" is chosen
-    elif option != 'A': #This elif has to be removed in the future, option set only to ignore other menu entries for study purposes.
-        print("Under development... Try again later!")
-        continue
     elif option not in MAIN_MENU:
         print("Invalid option...")
         continue
@@ -93,20 +91,17 @@ while True:
         #Show the menu for the Operation Menu
         show_menu('OPERATION MENU', OPERATION_MENU, 'Q - Quit Program')
         # fetches user's chosen option for the second menu
-        operation = input("Choose a valid operation: "
-        ).upper()
-
+        operation = input("Choose a valid operation: ").upper()
 
         if operation == 'A' and option == 'A':
             add_name = input("Do you want to add students? [Y = YES / N = NO] ").upper()
-            # Register a student's name and last name
+            # Register a student's course, name, surname and cpf
             if add_name == 'Y':
                 name = input("Enter the student\'s name: ").capitalize()
                 surname = input("Enter the student\'s last name: ").capitalize()
                 cpf = int(input("Enter the student\'s cpf: "))
                 course = select_course() # fetch course menu
-                # confirmation to validate registration
-                confirm = input(f"Do you confirm the registration of {name} {surname}? [Y = YES / N = NO] ").upper()
+                confirm = input(f"Do you confirm the registration of {name} {surname} as student? [Y = YES / N = NO] ").upper()
                 #creates a dictionary for the 'students' list if the previous menu was validated.
                 if confirm == 'Y':
                     new_student = {
@@ -116,24 +111,59 @@ while True:
                         'Course': course,
                     }
                     students.append(new_student)
-                    #show both new students and previous students registered
+                    # show both new and previous registered students
                     print(f"New student added successfully!")
                     print("Current list:", students)
                 else:
-                    #if the previous menu wasn't validated, shows current students and cancel the entry for new one
+                    # if the previous menu wasn't validated, shows current students and cancel the entry for new one
                     print("Registration canceled. The student was not added.")
                     print("Current list:", students)
             else:
                 # Skip the students registration and goes to the operation menu
                 print("If you want to check students, go to List Operation.")
 
-        elif operation == 'B':
+        elif operation == 'A' and option == 'B':
+            add_name = input('Do you want to add professors? [Y = YES / N = NO] ').upper()
+            if add_name == 'Y':
+                # Register a professor's course, name, surname and cpf
+                name = input("Enter professor\'s name: ").capitalize()
+                surname = input("Enter professor\'s last name: ").capitalize()
+                cpf = int(input("Enter professor\'s cpf: "))
+                course = select_course() # fetch course menu
+                confirm = input(f'Do you confirm the registration of {name} {surname} as professor? [Y = YES / N = NO] ').upper()
+                # creates a dictionary for the 'professors' list if the previous menu was validated.
+                if confirm == 'Y':
+                    new_professor = {
+                        'Name': name,
+                        'Surname': surname,
+                        'CPF': cpf,
+                        'Course': course,
+                    }
+                    professors.append(new_professor)
+                    # show both new and previous registered professors
+                    print(f"New professor added successfully!")
+                    print("Current list:", professors)
+                else:
+                    # if the previous menu wasn't validated, shows current professors and cancel the entry for new one
+                    print("Registration canceled. The professor was not added.")
+                    print("Current list:", professors)
+            else:
+                # Skip the professors registration and goes to the operation menu
+                print("If you want to check professors, go to List Operation.")
+
+        elif operation == 'B' and option == 'A':
             if len(students) == 0: #verify if no students are registered
                 print("No registered students yet.")
-            else: #show the registered students
-                print(f"The students registered are: {students}")
+            else: #show the registered students updated
+                print(f"The registered students are: {students}")
 
-        elif operation == 'C':
+        elif operation == 'B' and option == 'B':
+            if len(professors) == 0: # verify if no professors are registered
+                print("No registered professors yet.")
+            else: # show the registered professors updated
+                print(f'The registered professor are: {professors}')
+
+        elif operation == 'C' and option == 'A':
             if len(students) == 0: # verify if no students are registered
                 print("No registered students to exclude.")
                 continue
@@ -167,8 +197,54 @@ while True:
                                 # exclude students and return updated students list
                                 for i in sorted(indices, reverse=True):
                                     students.pop(i)
-                                print("Selected students excluded successfully!")
+                                print("Selected students successfully excluded!")
                                 print("Current list:", students)
+                            else:
+                                print("Operation cancelled.")
+                        except ValueError:
+                            # deal with user's input cannot be converted to integer
+                            print("Invalid input. Please enter numbers separated by commas")
+                    else:
+                        # user chose not to proceed with exclusion of students
+                        print("Returning to previous menus.")
+                        continue
+
+        elif operation == 'C' and option == 'B':
+            if len(professors) == 0: # verify if no professors are registered
+                print("No registered professors to exclude.")
+                continue
+            else: # if registered professors, proceeds to exclusion process
+                print("Registered professors:")
+                for i, professor in enumerate(professors): # enumerates the professors list with index (i.e.: 0, 1, 2, 3)
+                    print(f"{i}. - {professor['Name']} {professor['Surname']}") # shows the enumerated professors in the 'students' list
+                    exclude = input("Do you want to remove professors? [Y = YES / N = NO] ").upper()
+                    if exclude == 'Y':
+                        # prompt the user to enter the indices of students to be excluded
+                        indices_input = input("Enter the indices of students to be excluded: ")
+                        try:
+                            # convert string of indices into list of integers
+                            indices = [int(i) for i in indices_input.split(',')]
+                            # verifies if user gave any indices
+                            if not indices:
+                                print("No indices provided. Operation cancelled.")
+                                continue
+                            # verifies if the indices are within the actual range of the list
+                            invalid_indices = [i for i in indices if i < 0 or i >= len(professors)]
+                            if invalid_indices:
+                                print(f"Invalid {invalid_indices}. Please enter a valid index.")
+                                continue
+                            # show the students chosen to be excluded
+                            print("You are about to exclude the following professor:")
+                            for i in sorted(indices):
+                                print(f"{i}. - {professors[i]['Name']} {professors[i]['Surname']}")
+                            # final confirmation for exclusion
+                            confirm_exclusion = input("Do you confirm? [Y = YES / N = NO] ").upper()
+                            if confirm_exclusion == 'Y':
+                                # exclude professor and return updated professors list
+                                for i in sorted(indices, reverse=True):
+                                    professors.pop(i)
+                                print("Selected professor successfully excluded!")
+                                print("Current list:", professors)
                             else:
                                 print("Operation cancelled.")
                         except ValueError:
