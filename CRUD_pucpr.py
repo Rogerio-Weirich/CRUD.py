@@ -2,7 +2,7 @@
 Nome: Rogerio Raimundo Weirich
 Curso: Análise e Desenvolvimento de Sistemas
 """
-import random # import random numbers for ID
+#import random # import random numbers for ID
 
 students = [] #empty list for students registration
 professors = [] # empty list for professors
@@ -99,7 +99,14 @@ while True:
             if add_name == 'Y':
                 name = input("Enter the student\'s name: ").capitalize()
                 surname = input("Enter the student\'s last name: ").capitalize()
-                cpf = int(input("Enter the student\'s cpf: "))
+                while True:
+                    try:
+                        cpf = int(input('Enter student\'s cpf: '))
+                        if 10000000000 <= cpf <= 99999999999:
+                            break
+                        print('CPF needs to have 11 digits')
+                    except ValueError:
+                        print('Missing a number or no number digited')
                 course = select_course() # fetch course menu
                 confirm = input(f"Do you confirm the registration of {name} {surname} as student? [Y = YES / N = NO] ").upper()
                 #creates a dictionary for the 'students' list if the previous menu was validated.
@@ -128,7 +135,15 @@ while True:
                 # Register a professor's course, name, surname and cpf
                 name = input("Enter professor\'s name: ").capitalize()
                 surname = input("Enter professor\'s last name: ").capitalize()
-                cpf = int(input("Enter professor\'s cpf: "))
+                # changed the
+                while True:
+                    try:
+                        cpf = int(input('Enter professor\'s cpf: '))
+                        if 10000000000 <= cpf <= 99999999999:
+                            break
+                        print('CPF needs to have 11 digits')
+                    except ValueError:
+                        print('Missing a number or no number digited')
                 course = select_course() # fetch course menu
                 confirm = input(f'Do you confirm the registration of {name} {surname} as professor? [Y = YES / N = NO] ').upper()
                 # creates a dictionary for the 'professors' list if the previous menu was validated.
@@ -155,13 +170,19 @@ while True:
             if len(students) == 0: #verify if no students are registered
                 print("No registered students yet.")
             else: #show the registered students updated
-                print(f"The registered students are: {students}")
+                # added that simply to a better visual impact
+                for i, student in enumerate(students): # enumerates with index the professor list
+                    print("The registered students are: ")
+                    print(f"{i} - {students}")
 
         elif operation == 'B' and option == 'B':
             if len(professors) == 0: # verify if no professors are registered
                 print("No registered professors yet.")
             else: # show the registered professors updated
-                print(f'The registered professor are: {professors}')
+                # added that simply to a better visual impact
+                for i, professor in enumerate(professors): # enumerates with index the professor list
+                    print("The registered students are: ")
+                    print(f"{i} - {professors}")
 
         elif operation == 'C' and option == 'A':
             if len(students) == 0: # verify if no students are registered
@@ -169,7 +190,7 @@ while True:
                 continue
             else: # if registered students, proceeds to exclusion process
                 print("Registered students:")
-                for i, student in enumerate(students): # enumerates the students list with index (i.e.: 0, 1, 2, 3)
+                for i, student in enumerate(students): # enumerates the students list with index
                     print(f"{i}. - {student['Name']} {student['Surname']}") # shows the enumerated students in the 'students' list
                     exclude = input("Do you want to remove students? [Y = YES / N = NO] ").upper()
                     if exclude == 'Y':
@@ -215,7 +236,7 @@ while True:
                 continue
             else: # if registered professors, proceeds to exclusion process
                 print("Registered professors:")
-                for i, professor in enumerate(professors): # enumerates the professors list with index (i.e.: 0, 1, 2, 3)
+                for i, professor in enumerate(professors): # enumerates the professors list with index
                     print(f"{i}. - {professor['Name']} {professor['Surname']}") # shows the enumerated professors in the 'students' list
                     exclude = input("Do you want to remove professors? [Y = YES / N = NO] ").upper()
                     if exclude == 'Y':
@@ -255,8 +276,237 @@ while True:
                         print("Returning to previous menus.")
                         continue
 
-        elif operation == 'D':
-            print("Under development... Try again later!")
+        elif operation == 'D' and option == 'A':
+            if len(students) == 0: # verify if no students are registered
+                print("No registered students to edit")
+            else: # if registered students, proceeds to edit process
+                print("Registered Students:")
+                for i, student in enumerate(students): # enumerates the students list with index
+                    print(f"{i}. - {student['Name']} {student['Surname']}") # shows the index of student and name to edit
+                edit = input("Do you want to edit student? [Y = YES / N = NO] ").upper() # ask if confirm edition
+                if edit == 'Y':
+                    # prompt the user to enter coma separated indices of student
+                    indices_input = input("Enter the indices of students to be edited: ")
+                    try: # code that might present error
+                        # convert the input string into a list of integers
+                        indices = [int(i) for i in indices_input.split(',')]
+                        # check if the indices is impty
+                        if not indices:
+                            print("No indices provided. Operation cancelled.")
+                            # skip the loop
+                            continue
+                            # check for invalid indices (negatives or beyong lenght)
+                        invalid_indices = [i for i in indices if i < 0 or i >= len(students)]
+                        if invalid_indices:
+                            # inform the user about invalid indices and skip
+                            print(f"Invalid {invalid_indices}. Please enter a valid index.")
+                            continue
+                        # shows student for editing
+                        print("You are about to edit the following student:")
+                        for i in sorted(indices):
+                            # show details of student (name surname cpf course)
+                            print(f"{i}. - Name: {students[i]['Name']} Surname: {students[i]['Surname']} CPF: {students[i]['CPF']} Course: {students[i]['Course']}")
+                        # ask for confirmation to proceed edit
+                        confirm_edit = input("Do you confirm? [Y = YES / N = NO] ").upper()
+                        if confirm_edit == 'Y':
+                            # avoid index issues, iterate over indices in reverse
+                            for i in sorted(indices, reverse=True):
+                                print(f"\nEditing student: {new_student['Name']} {new_student['Surname']}")
+                                print('What would you like to edit?')
+                                # show edit menu options
+                                print("1 - Name")
+                                print("2 - Surname")
+                                print("3 - CPF")
+                                print("4 - Course")
+                                # prompt the user to choose edit option
+                                edit_option = input("Choose and option (1 - 4): ")
+                                # track if any change were made
+                                edited = False
+                                if edit_option == '1':
+                                    # prompt for new name
+                                    new_name = input("Enter new name for student: ").capitalize()
+                                    # check if input is not empty
+                                    if new_name.strip():
+                                        confirm = input(f'Confirm new name "{new_name}"? [Y = YES / N = NO] ').upper()
+                                        if confirm == 'Y':
+                                            new_student['Name'] = new_name
+                                            edited = True # this marks that there was an edit
+                                        else:
+                                            print("Name edit cancelled.")
+                                    else:
+                                        print("Empty input. Name edit cancelled.")
+                                elif edit_option == '2':
+                                    # prompt for new surname
+                                    new_surname = input("Enter new surname for student: ").capitalize()
+                                    # check if input is not empty
+                                    if new_surname.strip():
+                                        confirm = input(f'Confirm new name "{new_surname}"? [Y = YES / N = NO] ').upper()
+                                        if confirm == 'Y':
+                                            new_student['Surname'] = new_surname
+                                            edited = True # this marks that there was an edit
+                                        else:
+                                            print("Surname edit cancelled.")
+                                    else:
+                                        print("Empty input. Surname edit cancelled.")
+                                elif edit_option == '3':
+                                    # prompt for new cpf
+                                    new_cpf = input("Enter new cpf for student: ")
+                                    # check if input is not empty
+                                    if new_name.strip():
+                                        confirm = input(f'Confirm new cpf "{new_cpf}"? [Y = YES / N = NO] ').upper()
+                                        if confirm == 'Y':
+                                            new_student['CPF'] = new_cpf
+                                            edited = True # this marks that there was an edit
+                                        else:
+                                            print("CPF edit cancelled.")
+                                    else:
+                                        print("Empty input. CPF edit cancelled.")
+                                elif edit_option == '4':
+                                    # call a function to select course from COURSE MENU
+                                    new_course = select_course()
+                                    if new_course:
+                                        confirm = input(f"Confirm new course '{new_course}'? [Y = YES / N = NO] ").upper()
+                                        if confirm == 'Y':
+                                            new_student['Course'] = new_course
+                                            edited = True # this marks that there was an edit
+                                        else:
+                                            print("Course edit cancelled.")
+                                    else:
+                                        print("Invalid course. Course edit cancelled.")
+                                else:
+                                    print("Invalid option. No changes made.")
+                                # if any changes were made, show success message
+                                if edited:
+                                    print(f"Student {new_student['Name']} {new_student['Surname']} has been updated.")
+                            # show the current and updated list
+                            print("Current list:", students)
+                        else:
+                            # if no confirmation is given, cancel operation
+                            print("Operation cancelled.")
+                    except ValueError:
+                        # deal with invalid input like NaN indices
+                        print("Invalid input. Please enter numbers separated by commas")
+                else:
+                        # if use choose not to edit, return previous menu
+                        print("Returning to previous menus.")
+                continue
+
+        # this block is basically a copy paste of operation == 'D' and option == 'A'
+        elif operation == 'D' and option == 'B':
+            if len(professors) == 0: # verify if no professors are registered
+                print("No registered students to edit")
+            else: # if registered professors, proceeds to edit process
+                print("Registered Professors:")
+                for i, professor in enumerate(professors): # enumerates the professors list with index
+                    print(f"{i}. - {professor['Name']} {professor['Surname']}") # shows the index of professors and name to edit
+                    edit = input("Do you want to edit professor? [Y = YES / N = NO] ").upper() # ask if confirm edition
+                    if edit == 'Y':
+                        # prompt the user to enter coma separated indices of professor
+                        indices_input = input("Enter the indices of professors to be edited: ")
+                        try: # code that might present error
+                            # convert the input string into a list of integers
+                            indices = [int(i) for i in indices_input.split(',')]
+                            # check if the indices is impty
+                            if not indices:
+                                print("No indices provided. Operation cancelled.")
+                                # skip the loop
+                                continue
+                                # check for invalid indices (negatives or beyong lenght)
+                            invalid_indices = [i for i in indices if i < 0 or i >= len(students)]
+                            if invalid_indices:
+                                # inform the user about invalid indices and skip
+                                print(f"Invalid {invalid_indices}. Please enter a valid index.")
+                                continue
+                            # shows professor for editing
+                            print("You are about to edit the following student:")
+                            for i in sorted(indices):
+                                # show details of professor (name surname cpf course)
+                                print(f"{i}. - Name: {professors[i]['Name']} Surname: {professors[i]['Surname']} CPF: {professors[i]['CPF']} Course: {professors[i]['Course']}")
+                            # ask for confirmation to proceed edit
+                            confirm_edit = input("Do you confirm? [Y = YES / N = NO] ").upper()
+                            if confirm_edit == 'Y':
+                                # avoid index issues, iterate over indices in reverse
+                                for i in sorted(indices, reverse=True):
+                                    print(f"\nEditing professor: {new_professor['Name']} {new_professor['Surname']}")
+                                    print('What would you like to edit?')
+                                    # show edit menu options
+                                    print("1 - Name")
+                                    print("2 - Surname")
+                                    print("3 - CPF")
+                                    print("4 - Course")
+                                    # prompt the user to choose edit option
+                                    edit_option = input("Choose and option (1 - 4): ")
+                                    # track if any change were made
+                                    edited = False # begin as false, assuming that no edition has been made yet
+                                    if edit_option == '1':
+                                        # prompt for new name
+                                        new_name = input("Enter new name for professor: ").capitalize()
+                                        # check if input is not empty
+                                        if new_name.strip():
+                                            confirm = input(f'Confirm new name "{new_name}"? [Y = YES / N = NO] ').upper()
+                                            if confirm == 'Y':
+                                                new_professor['Name'] = new_name
+                                                edited = True # this marks that there was an edit
+                                            else:
+                                                print("Name edit cancelled.")
+                                        else:
+                                            print("Empty input. Name edit cancelled.")
+                                    elif edit_option == '2':
+                                        # prompt for new surname
+                                        new_surname = input("Enter new surname for professor: ").capitalize()
+                                        # check if input is not empty
+                                        if new_surname.strip():
+                                            confirm = input(f'Confirm new name "{new_surname}"? [Y = YES / N = NO] ').upper()
+                                            if confirm == 'Y':
+                                                new_professor['Surname'] = new_surname
+                                                edited = True # this marks that there was an edit
+                                            else:
+                                                print("Surname edit cancelled.")
+                                        else:
+                                            print("Empty input. Surname edit cancelled.")
+                                    elif edit_option == '3':
+                                        # prompt for new cpf
+                                        new_cpf = input("Enter new cpf for professor: ")
+                                        # check if input is not empty
+                                        if new_cpf.strip():
+                                            confirm = input(f'Confirm new cpf "{new_cpf}"? [Y = YES / N = NO] ').upper()
+                                            if confirm == 'Y':
+                                                new_professor['CPF'] = new_cpf
+                                                edited = True # this marks that there was an edit
+                                            else:
+                                                print("CPF edit cancelled.")
+                                        else:
+                                            print("Empty input. CPF edit cancelled.")
+                                    elif edit_option == '4':
+                                        # call a function to select course from COURSE MENU
+                                        new_course = select_course()
+                                        if new_course:
+                                            confirm = input(f"Confirm new course '{new_course}'? [Y = YES / N = NO] ").upper()
+                                            if confirm == 'Y':
+                                                new_professor['Course'] = new_course
+                                                edited = True # this marks that there was an edit
+                                            else:
+                                                print("Course edit cancelled.")
+                                        else:
+                                            print("Invalid course. Course edit cancelled.")
+                                    else:
+                                        print("Invalid option. No changes made.")
+                                    # if any changes were made, show success message
+                                    if edited:
+                                        print(f"Professor {new_professor['Name']} {new_professor['Surname']} has been updated.")
+                                # show the current and updated list
+                                print("Current list:", professors)
+                            else:
+                                # if no confirmation is given, cancel operation
+                                print("Operation cancelled.")
+                        except ValueError:
+                            # deal with invalid input like NaN indices
+                            print("Invalid input. Please enter numbers separated by commas")
+                    else:
+                            # if use choose not to edit, return previous menu
+                            print("Returning to previous menus.")
+                    continue
+
         elif operation == 'X': # exit second menu and go back to main menu
             print("Returning to main menu...")
             break
