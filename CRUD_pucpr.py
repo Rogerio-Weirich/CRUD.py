@@ -225,43 +225,43 @@ while True:
                 print("Registered students:")
                 for i, student in enumerate(students): # enumerates the students list with index
                     print(f"{i}. - {student['Name']} {student['Surname']}") # shows the enumerated students in the 'students' list
-                    exclude = input("Do you want to remove students? [Y = YES / N = NO] ").upper()
-                    if exclude == 'Y':
-                        # prompt the user to enter the indices of students to be excluded
-                        indices_input = input("Enter the indices of students to be excluded: ")
-                        try:
-                            # convert string of indices into list of integers
-                            indices = [int(i) for i in indices_input.split(',')]
-                            # verifies if user gave any indices
-                            if not indices:
-                                print("No indices provided. Operation cancelled.")
-                                continue
-                            # verifies if the indices are within the actual range of the list
-                            invalid_indices = [i for i in indices if i < 0 or i >= len(students)]
-                            if invalid_indices:
-                                print(f"Invalid {invalid_indices}. Please enter a valid index.")
-                                continue
-                            # show the students chosen to be excluded
-                            print("You are about to exclude the following students:")
-                            for i in sorted(indices):
-                                print(f"{i}. - {students[i]['Name']} {students[i]['Surname']}")
-                            # final confirmation for exclusion
-                            confirm_exclusion = input("Do you confirm? [Y = YES / N = NO] ").upper()
-                            if confirm_exclusion == 'Y':
-                                # exclude students and return updated students list
-                                for i in sorted(indices, reverse=True):
-                                    students.pop(i)
-                                print("Selected students successfully excluded!")
-                                show_students(students)
-                            else:
-                                print("Operation cancelled.")
-                        except ValueError:
-                            # deal with user's input cannot be converted to integer
-                            print("Invalid input. Please enter numbers separated by commas")
-                    else:
-                        # user chose not to proceed with exclusion of students
-                        print("Returning to previous menus.")
-                        continue
+                exclude = input("Do you want to remove students? [Y = YES / N = NO] ").upper()
+                if exclude == 'Y':
+                    # prompt the user to enter the indices of students to be excluded
+                    indices_input = input("Enter the indices of students to be excluded: ")
+                    try:
+                        # convert string of indices into list of integers
+                        indices = [int(i) for i in indices_input.split(',')]
+                        # verifies if user gave any indices
+                        if not indices:
+                            print("No indices provided. Operation cancelled.")
+                            continue
+                        # verifies if the indices are within the actual range of the list
+                        invalid_indices = [i for i in indices if i < 0 or i >= len(students)]
+                        if invalid_indices:
+                            print(f"Invalid {invalid_indices}. Please enter a valid index.")
+                            continue
+                        # show the students chosen to be excluded
+                        print("You are about to exclude the following students:")
+                        for i in sorted(indices):
+                            print(f"{i}. - {students[i]['Name']} {students[i]['Surname']}")
+                        # final confirmation for exclusion
+                        confirm_exclusion = input("Do you confirm? [Y = YES / N = NO] ").upper()
+                        if confirm_exclusion == 'Y':
+                            # exclude students and return updated students list
+                            for i in sorted(indices, reverse=True):
+                                students.pop(i)
+                            print("Selected students successfully excluded!")
+                            show_students(students)
+                        else:
+                            print("Operation cancelled.")
+                    except ValueError:
+                        # deal with user's input cannot be converted to integer
+                        print("Invalid input. Please enter numbers separated by commas")
+                else:
+                    # user chose not to proceed with exclusion of students
+                    print("Returning to previous menus.")
+                    continue
 
         elif operation == 'C' and option == 'B':
             if len(professors) == 0: # verify if no professors are registered
@@ -271,43 +271,43 @@ while True:
                 print("Registered professors:")
                 for i, professor in enumerate(professors): # enumerates the professors list with index
                     print(f"{i}. - {professor['Name']} {professor['Surname']}") # shows the enumerated professors in the 'students' list
-                    exclude = input("Do you want to remove professors? [Y = YES / N = NO] ").upper()
-                    if exclude == 'Y':
-                        # prompt the user to enter the indices of students to be excluded
-                        indices_input = input("Enter the indices of students to be excluded: ")
-                        try:
-                            # convert string of indices into list of integers
-                            indices = [int(i) for i in indices_input.split(',')]
-                            # verifies if user gave any indices
-                            if not indices:
-                                print("No indices provided. Operation cancelled.")
-                                continue
-                            # verifies if the indices are within the actual range of the list
-                            invalid_indices = [i for i in indices if i < 0 or i >= len(professors)]
-                            if invalid_indices:
-                                print(f"Invalid {invalid_indices}. Please enter a valid index.")
-                                continue
-                            # show the students chosen to be excluded
-                            print("You are about to exclude the following professor:")
-                            for i in sorted(indices):
-                                print(f"{i}. - {professors[i]['Name']} {professors[i]['Surname']}")
-                            # final confirmation for exclusion
-                            confirm_exclusion = input("Do you confirm? [Y = YES / N = NO] ").upper()
-                            if confirm_exclusion == 'Y':
-                                # exclude professor and return updated professors list
-                                for i in sorted(indices, reverse=True):
-                                    professors.pop(i)
-                                print("Selected professor successfully excluded!") # >:)
-                                show_professors(professors)
-                            else:
-                                print("Operation cancelled.")
-                        except ValueError:
-                            # deal with user's input cannot be converted to integer
-                            print("Invalid input. Please enter numbers separated by commas")
-                    else:
-                        # user chose not to proceed with exclusion of students
-                        print("Returning to previous menus.")
-                        continue
+                exclude = input("Do you want to remove professors? [Y = YES / N = NO] ").upper()
+                if exclude == 'Y':
+                    # prompt the user to enter the indices of students to be excluded
+                    indices_input = input("Enter the indices of students to be excluded: ")
+                    try:
+                        # convert string of indices into list of integers
+                        indices = [int(i) for i in indices_input.split(',')]
+                        # verifies if user gave any indices
+                        if not indices:
+                            print("No indices provided. Operation cancelled.")
+                            continue
+                        # verifies if the indices are within the actual range of the list
+                        invalid_indices = [i for i in indices if i < 0 or i >= len(professors)]
+                        if invalid_indices:
+                            print(f"Invalid {invalid_indices}. Please enter a valid index.")
+                            continue
+                        # show the students chosen to be excluded
+                        print("You are about to exclude the following professor:")
+                        for i in sorted(indices):
+                            print(f"{i}. - {professors[i]['Name']} {professors[i]['Surname']}")
+                        # final confirmation for exclusion
+                        confirm_exclusion = input("Do you confirm? [Y = YES / N = NO] ").upper()
+                        if confirm_exclusion == 'Y':
+                            # exclude professor and return updated professors list
+                            for i in sorted(indices, reverse=True):
+                                professors.pop(i)
+                            print("Selected professor successfully excluded!") # >:)
+                            show_professors(professors)
+                        else:
+                            print("Operation cancelled.")
+                    except ValueError:
+                        # deal with user's input cannot be converted to integer
+                        print("Invalid input. Please enter numbers separated by commas")
+                else:
+                    # user chose not to proceed with exclusion of students
+                    print("Returning to previous menus.")
+                    continue
 
         elif operation == 'D' and option == 'A':
             if len(students) == 0: # verify if no students are registered
