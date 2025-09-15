@@ -2,10 +2,23 @@
 Nome: Rogerio Raimundo Weirich
 Curso: Análise e Desenvolvimento de Sistemas
 """
-#import random # import random numbers for ID
+import random # import random numbers for ID
 
 students = [] #empty list for students registration
 professors = [] # empty list for professors
+
+# noinspection PyShadowingNames
+def generate_id(existing_ids):
+    while True:
+        new_id = random.randint(10000, 99999)
+        if new_id not in existing_ids:
+            return new_id
+
+# noinspection PyShadowingNames
+# this function aims to format the CPF to a XXX.XXX.XXX-XX format, has no big impact on the code, only aesthetics
+def format_cpf(cpf):
+    cpf_str = str(cpf)
+    return f'{cpf_str[0:3]}.{cpf_str[3:6]}.{cpf_str[6:9]}-{cpf_str[9:]}'
 
 # noinspection PyShadowingNames
 def add_student(new_student): #defines a function for name and surname
@@ -16,6 +29,24 @@ def add_student(new_student): #defines a function for name and surname
 def add_professor(new_professor): # defines a function for name and surname
     professors.append(new_professor) # add the value 'name' and 'surname' to the list 'professors'
     return professors # returns the list 'professors' updated
+
+# noinspection PyShadowingNames
+def show_students(students):
+    if not students:
+        print("No registered students yet.")
+        return
+    print("\n=== Students ===")
+    for i, student in enumerate(students):
+        print(f"{i} - ID: {student['ID']}, Full name: {student['Name']} {student['Surname']}, CPF: {format_cpf(student['CPF'])}, Course: {student['Course']}")
+
+# noinspection PyShadowingNames
+def show_professors(professors):
+    if not professors:
+        print("No registered professors yet.")
+        return
+    print("\n=== Professors ===")
+    for i, professor in enumerate(professors):
+        print(f"{i} - ID: {professor['ID']}, Full name: {professor['Name']} {professor['Surname']}, CPF: {format_cpf(professor['CPF'])}, Course: {professor['Course']}")
 
 def show_menu(title, menu_option, extra): #show the formatted menu
     print(f'\n==={title}===') #show the titles for each menu
@@ -40,6 +71,7 @@ def select_course(): # defines the course menu
     if course_option in COURSE_MENU: # validates the course options
         return COURSE_MENU[course_option]
     elif course_option == '0':
+        print("No course selected yet")
         return None
     else:
         print('Invalid course option. No course assigned.')
@@ -99,19 +131,22 @@ while True:
             if add_name == 'Y':
                 name = input("Enter the student\'s name: ").capitalize()
                 surname = input("Enter the student\'s last name: ").capitalize()
+                # changed the treatment for cpf, not it consider 11 numbers
                 while True:
                     try:
                         cpf = int(input('Enter student\'s cpf: '))
                         if 10000000000 <= cpf <= 99999999999:
                             break
-                        print('CPF needs to have 11 digits')
+                        print('CPF must have 11 digits')
                     except ValueError:
                         print('Missing a number or no number digited')
                 course = select_course() # fetch course menu
+                student_id = generate_id({student['ID'] for student in students})
                 confirm = input(f"Do you confirm the registration of {name} {surname} as student? [Y = YES / N = NO] ").upper()
                 #creates a dictionary for the 'students' list if the previous menu was validated.
                 if confirm == 'Y':
                     new_student = {
+                        'ID': student_id,
                         'Name': name,
                         'Surname': surname,
                         'CPF': cpf,
@@ -120,11 +155,11 @@ while True:
                     students.append(new_student)
                     # show both new and previous registered students
                     print(f"New student added successfully!")
-                    print("Current list:", students)
+                    show_students(students)
                 else:
                     # if the previous menu wasn't validated, shows current students and cancel the entry for new one
                     print("Registration canceled. The student was not added.")
-                    print("Current list:", students)
+                    show_students(students)
             else:
                 # Skip the students registration and goes to the operation menu
                 print("If you want to check students, go to List Operation.")
@@ -135,20 +170,22 @@ while True:
                 # Register a professor's course, name, surname and cpf
                 name = input("Enter professor\'s name: ").capitalize()
                 surname = input("Enter professor\'s last name: ").capitalize()
-                # changed the
+                # changed the treatment for cpf, not it consider 11 numbers
                 while True:
                     try:
                         cpf = int(input('Enter professor\'s cpf: '))
                         if 10000000000 <= cpf <= 99999999999:
                             break
-                        print('CPF needs to have 11 digits')
+                        print('CPF must have 11 digits')
                     except ValueError:
                         print('Missing a number or no number digited')
                 course = select_course() # fetch course menu
+                professor_id = generate_id({professor['ID'] for professor in professors})
                 confirm = input(f'Do you confirm the registration of {name} {surname} as professor? [Y = YES / N = NO] ').upper()
                 # creates a dictionary for the 'professors' list if the previous menu was validated.
                 if confirm == 'Y':
                     new_professor = {
+                        'ID': professor_id,
                         'Name': name,
                         'Surname': surname,
                         'CPF': cpf,
@@ -157,11 +194,11 @@ while True:
                     professors.append(new_professor)
                     # show both new and previous registered professors
                     print(f"New professor added successfully!")
-                    print("Current list:", professors)
+                    show_professors(professors)
                 else:
                     # if the previous menu wasn't validated, shows current professors and cancel the entry for new one
                     print("Registration canceled. The professor was not added.")
-                    print("Current list:", professors)
+                    show_professors(professors)
             else:
                 # Skip the professors registration and goes to the operation menu
                 print("If you want to check professors, go to List Operation.")
@@ -171,18 +208,14 @@ while True:
                 print("No registered students yet.")
             else: #show the registered students updated
                 # added that simply to a better visual impact
-                for i, student in enumerate(students): # enumerates with index the professor list
-                    print("The registered students are: ")
-                    print(f"{i} - {students}")
+                show_students(students)
 
         elif operation == 'B' and option == 'B':
             if len(professors) == 0: # verify if no professors are registered
                 print("No registered professors yet.")
             else: # show the registered professors updated
                 # added that simply to a better visual impact
-                for i, professor in enumerate(professors): # enumerates with index the professor list
-                    print("The registered students are: ")
-                    print(f"{i} - {professors}")
+                show_professors(professors)
 
         elif operation == 'C' and option == 'A':
             if len(students) == 0: # verify if no students are registered
@@ -219,7 +252,7 @@ while True:
                                 for i in sorted(indices, reverse=True):
                                     students.pop(i)
                                 print("Selected students successfully excluded!")
-                                print("Current list:", students)
+                                show_students(students)
                             else:
                                 print("Operation cancelled.")
                         except ValueError:
@@ -264,8 +297,8 @@ while True:
                                 # exclude professor and return updated professors list
                                 for i in sorted(indices, reverse=True):
                                     professors.pop(i)
-                                print("Selected professor successfully excluded!")
-                                print("Current list:", professors)
+                                print("Selected professor successfully excluded!") # >:)
+                                show_professors(professors)
                             else:
                                 print("Operation cancelled.")
                         except ValueError:
@@ -352,8 +385,8 @@ while True:
                                     # prompt for new cpf
                                     new_cpf = input("Enter new cpf for student: ")
                                     # check if input is not empty
-                                    if new_name.strip():
-                                        confirm = input(f'Confirm new cpf "{new_cpf}"? [Y = YES / N = NO] ').upper()
+                                    if new_cpf.strip():
+                                        confirm = input(f'Confirm new cpf "{format_cpf(new_cpf)}"? [Y = YES / N = NO] ').upper()
                                         if confirm == 'Y':
                                             new_student['CPF'] = new_cpf
                                             edited = True # this marks that there was an edit
@@ -379,7 +412,7 @@ while True:
                                 if edited:
                                     print(f"Student {new_student['Name']} {new_student['Surname']} has been updated.")
                             # show the current and updated list
-                            print("Current list:", students)
+                            show_students(students)
                         else:
                             # if no confirmation is given, cancel operation
                             print("Operation cancelled.")
@@ -469,7 +502,7 @@ while True:
                                         new_cpf = input("Enter new cpf for professor: ")
                                         # check if input is not empty
                                         if new_cpf.strip():
-                                            confirm = input(f'Confirm new cpf "{new_cpf}"? [Y = YES / N = NO] ').upper()
+                                            confirm = input(f'Confirm new cpf "{format_cpf(new_cpf)}"? [Y = YES / N = NO] ').upper()
                                             if confirm == 'Y':
                                                 new_professor['CPF'] = new_cpf
                                                 edited = True # this marks that there was an edit
@@ -495,7 +528,7 @@ while True:
                                     if edited:
                                         print(f"Professor {new_professor['Name']} {new_professor['Surname']} has been updated.")
                                 # show the current and updated list
-                                print("Current list:", professors)
+                                show_professors(new_professor)
                             else:
                                 # if no confirmation is given, cancel operation
                                 print("Operation cancelled.")
@@ -510,12 +543,10 @@ while True:
         elif operation == 'X': # exit second menu and go back to main menu
             print("Returning to main menu...")
             break
-
         elif operation == 'Q': #Quits the prrogram
             print("Quitting program...")
             finish_all = True
             break
-
         elif operation not in OPERATION_MENU: #if invalid, show the operation menu again
             print("Invalid operation, try again")
             continue
@@ -525,11 +556,9 @@ while True:
         if finish == 'Y': #validate the second menu option
             print("Operation successfully finished...")
             continue
-
         elif finish == 'N': #returns to the previous menu
             print("Returning the previous menu")
             continue
-
         elif finish == 'Q': #quits the program
             print("Quitting program...")
             finish_all = True
@@ -537,7 +566,6 @@ while True:
         else:
             print("Invalid option")
             continue
-
     #finish the looping
     if finish_all:
         break
