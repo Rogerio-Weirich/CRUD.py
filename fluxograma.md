@@ -16,7 +16,7 @@ Se = (X) Sair
 Salva dados 
 [ FIM ]  
 
-Senão se = (A) Estudante ou (B) Professor 
+Senão se = (A) Estudante ou (B) Professor
 Exibe: "Opção selecionada: {Estudante|Professor}" 
 MENU SECUNDÁRIO
 (A) Adicionar 
