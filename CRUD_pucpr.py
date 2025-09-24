@@ -83,6 +83,18 @@ def validate_cpf():
         try: # validates if cpf has 11 digits and if its valid
             cpf = int(input('Enter CPF (11 digits): '))
             if 10000000000 <= cpf <= 99999999999: # ensure it has 11 digits
+                existing_cpf = False
+                for student in students:  # verify if CPF already exists in students
+                    if student['CPF'] == cpf:
+                        existing_cpf = True
+                        break
+                for professor in professors:  # verify if CPF already exists in professors
+                    if professor['CPF'] == cpf:
+                        existing_cpf = True
+                        break
+                if existing_cpf:
+                    print("This CPF is already registered. Please enter an unique CPF.")
+                    continue
                 return cpf
             print("CPF must have 11 digits.")
         except ValueError: # treatment for NaN
@@ -746,7 +758,10 @@ while True:
                 remove_class(classes, enrollments)
             elif option == 'E':
                 remove_enrollment(enrollments, students, classes)
-                                  
+
+        elif operation not in OPERATION_MENU:  # if operation invalid
+            print("Invalid operation, try again.")
+            continue  # returns to operation menu and display the loop
         elif operation == 'X': # Back to main menu
             print("Returning to main menu...")
             break
