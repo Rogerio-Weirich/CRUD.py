@@ -64,7 +64,6 @@ def load_data(filename='data.json'): # load data yay
         return [], [], [], []
 
 
-
 '''=== SUPPORT FUNCTIONS(I guess 👀) ==='''
 def generate_id(existing_ids): # generates random ID for new studentes/professor
     while True:
@@ -759,9 +758,6 @@ while True:
             elif option == 'E':
                 remove_enrollment(enrollments, students, classes)
 
-        elif operation not in OPERATION_MENU:  # if operation invalid
-            print("Invalid operation, try again.")
-            continue  # returns to operation menu and display the loop
         elif operation == 'X': # Back to main menu
             print("Returning to main menu...")
             break
@@ -769,6 +765,9 @@ while True:
             print("Quitting program...")
             finish_all = True
             break
+        elif operation not in OPERATION_MENU:  # if operation invalid
+            print("Invalid operation, try again.")
+            continue  # returns to operation menu and display the loop
         else: # If invalid!!!
             print("Invalid operation, try again.")
             
